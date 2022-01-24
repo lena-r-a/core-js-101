@@ -126,8 +126,13 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  let result = true;
+  if (rect2.left > rect1.left + rect1.width
+    || rect2.top > rect1.top + rect1.height) result = false;
+  if (rect1.top + rect1.height < rect2.top
+    || rect1.left + rect1.width < rect2.left) result = false;
+  return result;
 }
 
 
@@ -157,8 +162,8 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  return (point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2 < circle.radius ** 2;
 }
 
 
@@ -205,8 +210,8 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  return `${isStartIncluded ? '[' : '('}${Math.min(a, b)}, ${Math.max(a, b)}${isEndIncluded ? ']' : ')'}`;
 }
 
 
@@ -265,8 +270,19 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  let sum = 0;
+  let secondNum = false;
+  for (let i = String(ccn).length - 1; i >= 0; i -= 1) {
+    let number = +String(ccn)[i];
+    if (secondNum) {
+      number *= 2;
+      if (number > 9) number -= 9;
+    }
+    sum += number;
+    secondNum = !secondNum;
+  }
+  return sum % 10 === 0;
 }
 
 /**
@@ -317,8 +333,17 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const stack = [];
+  const brackets = '[]{}<>()';
+  for (let i = 0; i < str.length; i += 1) {
+    const indexofBRacket = brackets.indexOf(str[i]);
+    if (indexofBRacket % 2 === 0) {
+      stack.push(brackets[indexofBRacket + 1]);
+    }
+    if (indexofBRacket % 2 === 1 && stack.pop() !== brackets[indexofBRacket]) return false;
+  }
+  return stack.length === 0;
 }
 
 
